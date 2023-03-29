@@ -1,3 +1,5 @@
+import { clearUserData, getUserData } from '../util.js';
+
 const host = 'http://parseapi.back4app.com';
 const appId = '9QmOxvHUky9KQxo8tPUQem93BPEolCcm20rMyrBf';
 const apiKey = 'wjOwiaTMqvtAefnClzQ4oVpWSUPNRUCgIiEVkgsb';
@@ -10,6 +12,11 @@ async function request(method, url, data) {
       'X-Parse-JavaScript-Key': apiKey,
     },
   };
+
+  const userData = getUserData();
+  if (userData) {
+    options.headers['X-Parse-Session-Token'] = userData.sessionToken;
+  }
 
   if (data) {
     options.headers['Content-Type'] = 'application/json';
@@ -25,13 +32,29 @@ async function request(method, url, data) {
     }
 
     if (!response.ok) {
-      throw result;
+      if (result.code === 209) {
+        clearUserData();
+      }
+
+      const error = result;
+      throw {
+        message: error.error,
+        handled: false,
+      };
     }
 
     return result;
   } catch (error) {
-    alert(error.message);
+    handleError(error);
     throw error;
+  }
+}
+
+async function handleError(error) {
+  await new Promise((r) => setTimeout(r, 50));
+
+  if (!error.handled) {
+    alert(error.message);
   }
 }
 

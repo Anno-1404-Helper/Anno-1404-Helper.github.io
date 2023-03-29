@@ -15,5 +15,8 @@
   "dependencies": {
     "lit-html": "^2.7.0",
     "page": "^1.11.6"
+  },
+  "devDependencies": {
+    "eslint": "^8.37.0"
   }
 }
