@@ -17,11 +17,11 @@ export const layoutTemplate = (tab, content) => html`<header>
       </div>
       <div class="nav-left">
         <a
-          href=""
+          href="/"
           class=${classMap({
             nav: true,
             tab: true,
-            active: tab === '',
+            active: tab === '/',
           })}
         >
           <span class="icon" style="background-position: -828px -736px"></span
