@@ -5,11 +5,11 @@ export const layoutTemplate = (tab, content) => html`<header>
     <nav class="main-nav">
       <div class="nav-left">
         <a
-          href="settings"
+          href="/settings"
           class=${classMap({
             nav: true,
             tab: true,
-            active: tab === 'settings',
+            active: tab === '/settings',
           })}
         >
           <span class="icon" style="background-position: -368px -736px"></span

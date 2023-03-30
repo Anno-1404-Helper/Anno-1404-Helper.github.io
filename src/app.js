@@ -10,7 +10,7 @@ import { renderLogin } from './views/login.js';
 page(addRender);
 page(addSession);
 
-page('index.html', '');
+page('/index.html', '/');
 page('/', renderIslands);
 page('/settings', renderSettings);
 page('/login', renderLogin);

@@ -19,7 +19,7 @@ export function renderLogin(ctx) {
 
       await login(username, password);
 
-      ctx.page.redirect('settings');
+      ctx.page.redirect('/settings');
     } catch (error) {
       update({ username }, error.message);
       error.handled = true;
