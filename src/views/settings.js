@@ -9,7 +9,7 @@ const settignsTemplate = (user) => html`<h1>Settings Page</h1>
     ${user
       ? nothing
       : html`<div>
-            <a class="link" href="/login">Sign in</a> to enable cloud sync
+            <a class="link" href="login">Sign in</a> to enable cloud sync
           </div>
           <br />`}
 
