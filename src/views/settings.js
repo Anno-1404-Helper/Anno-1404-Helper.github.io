@@ -1,4 +1,4 @@
-import { createGame, getGames } from '../data/games.js';
+import { createGame, deleteGame, getGames } from '../data/games.js';
 import { html, nothing } from '../lib/lit-html.js';
 import { createSubmitHandler } from '../util.js';
 
@@ -9,7 +9,13 @@ export async function renderSettings(ctx) {
 
   function update(error) {
     ctx.render(
-      settignsTemplate(games, ctx.user, createSubmitHandler(onCreate), error)
+      settignsTemplate(
+        games,
+        ctx.user,
+        createSubmitHandler(onCreate),
+        onDelete,
+        error
+      )
     );
   }
 
@@ -33,11 +39,21 @@ export async function renderSettings(ctx) {
       update();
     } catch (error) {
       update(error.message);
+      error.handled = true;
     }
+  }
+
+  async function onDelete(index) {
+    const game = games[index];
+
+    await deleteGame(game.objectId);
+    games.splice(index, 1);
+
+    update();
   }
 }
 
-const settignsTemplate = (games, user, onCreate, error) => html`<h1>
+const settignsTemplate = (games, user, onCreate, onDelete, error) => html`<h1>
     Settings Page
   </h1>
   <section class="main">
@@ -60,7 +76,7 @@ const settignsTemplate = (games, user, onCreate, error) => html`<h1>
           ? html`<tr>
               <td colspan="2">No games recorded!</td>
             </tr>`
-          : games.map(gameTemplate)}
+          : games.map((g, i) => gameTemplate(g, onDelete.bind(null, i)))}
       </tbody>
       <tfoot>
         <tr>
@@ -78,11 +94,13 @@ const settignsTemplate = (games, user, onCreate, error) => html`<h1>
     </table>
   </section>`;
 
-const gameTemplate = (game) =>
+const gameTemplate = (game, onDelete) =>
   html`<tr>
     <td>${game.name}</td>
     <td>
       <button class="btn"><i class="fa-solid fa-download"></i> Load</button>
-      <button class="btn"><i class="fa-solid fa-trash-can"></i> Delete</button>
+      <button @click=${onDelete} class="btn">
+        <i class="fa-solid fa-trash-can"></i> Delete
+      </button>
     </td>
   </tr>`;

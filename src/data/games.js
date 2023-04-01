@@ -1,4 +1,4 @@
-import { get, post } from './api.js';
+import { get, post, del } from './api.js';
 import { addOwner } from './pointers.js';
 
 const endpoints = {
@@ -13,4 +13,8 @@ export async function getGames() {
 export async function createGame(game) {
   addOwner(game);
   return await post(endpoints.catalog, game);
+}
+
+export async function deleteGame(id) {
+  return await del(endpoints.byId + id);
 }
