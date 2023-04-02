@@ -1,6 +1,7 @@
 import { createGame, deleteGame, getGames } from '../data/games.js';
 import { html, nothing } from '../lib/lit-html.js';
 import { createSubmitHandler } from '../util.js';
+import { icon } from './partials.js';
 
 export async function renderSettings(ctx) {
   const games = ctx.user ? await getGames() : [];
@@ -8,12 +9,20 @@ export async function renderSettings(ctx) {
   update();
 
   function update(error) {
+    if (ctx.game) {
+      const current = games.find((game) => game.objectId === ctx.game.objectId);
+      if (current) {
+        current.active = true;
+      }
+    }
+
     ctx.render(
       settignsTemplate(
         games,
         ctx.user,
         createSubmitHandler(onCreate),
         onDelete,
+        onLoad,
         error
       )
     );
@@ -51,11 +60,24 @@ export async function renderSettings(ctx) {
 
     update();
   }
+
+  async function onLoad(index) {
+    const game = games[index];
+
+    ctx.setGame(game);
+
+    update();
+  }
 }
 
-const settignsTemplate = (games, user, onCreate, onDelete, error) => html`<h1>
-    Settings Page
-  </h1>
+const settignsTemplate = (
+  games,
+  user,
+  onCreate,
+  onDelete,
+  onLoad,
+  error
+) => html`<h1>Settings Page</h1>
   <section class="main">
     ${user
       ? nothing
@@ -76,7 +98,9 @@ const settignsTemplate = (games, user, onCreate, onDelete, error) => html`<h1>
           ? html`<tr>
               <td colspan="2">No games recorded!</td>
             </tr>`
-          : games.map((g, i) => gameTemplate(g, onDelete.bind(null, i)))}
+          : games.map((g, i) =>
+              gameTemplate(g, onDelete.bind(null, i), onLoad.bind(null, i))
+            )}
       </tbody>
       <tfoot>
         <tr>
@@ -94,11 +118,13 @@ const settignsTemplate = (games, user, onCreate, onDelete, error) => html`<h1>
     </table>
   </section>`;
 
-const gameTemplate = (game, onDelete) =>
+const gameTemplate = (game, onDelete, onLoad) =>
   html`<tr>
-    <td>${game.name}</td>
+    <td>${game.active ? icon('arrow') : nothing}${game.name}</td>
     <td>
-      <button class="btn"><i class="fa-solid fa-download"></i> Load</button>
+      <button @click=${onLoad} class="btn">
+        <i class="fa-solid fa-download"></i> Load
+      </button>
       <button @click=${onDelete} class="btn">
         <i class="fa-solid fa-trash-can"></i> Delete
       </button>

@@ -2,10 +2,12 @@ import page from './lib/page.mjs';
 
 import { addRender } from './middlewares/render.js';
 import { addSession } from './middlewares/session.js';
+import { addStorage } from './middlewares/storage.js';
 
 import { renderSettings } from './views/settings.js';
 import { renderIslands } from './views/islands.js';
 import { renderLogin } from './views/login.js';
+
 import { login, register } from './data/auth.js';
 import { getGames } from './data/games.js';
 
@@ -14,6 +16,7 @@ window.getGames = getGames;
 window.login = login;
 
 page(addRender);
+page(addStorage);
 page(addSession);
 
 page('/index.html', '/');
