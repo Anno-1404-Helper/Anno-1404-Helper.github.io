@@ -1,15 +1,17 @@
-import { login } from '../data/auth.js';
+import { register } from '../data/auth.js';
 import { html } from '../lib/lit-html.js';
 import { createSubmitHandler } from '../util.js';
 
-export function renderLogin(ctx) {
+export function renderRegister(ctx) {
   update();
 
   function update(formData, error) {
-    ctx.render(loginTemplate(createSubmitHandler(onLogin), formData, error));
+    ctx.render(
+      registerTemplate(createSubmitHandler(onRegister), formData, error)
+    );
   }
 
-  async function onLogin({ username, password }) {
+  async function onRegister({ username, password, repass }) {
     try {
       if (!username || !password) {
         throw {
@@ -17,7 +19,13 @@ export function renderLogin(ctx) {
         };
       }
 
-      await login(username, password);
+      if (password !== repass) {
+        throw {
+          message: 'Passwords must match!',
+        };
+      }
+
+      await register(username, password);
 
       ctx.page.redirect('/settings');
     } catch (error) {
@@ -27,10 +35,10 @@ export function renderLogin(ctx) {
   }
 }
 
-const loginTemplate = (onLogin, formData = {}, error) =>
-  html`<h1>Login</h1>
+const registerTemplate = (onRegister, formData = {}, error) =>
+  html`<h1>Register</h1>
     <section class="main">
-      <form @submit=${onLogin}>
+      <form @submit=${onRegister}>
         <div class="layout">
           ${error ? html`<p class="error">${error}</p>` : null}
           <label for="username">Username</label>
@@ -42,10 +50,12 @@ const loginTemplate = (onLogin, formData = {}, error) =>
           />
           <label for="password">Password</label>
           <input id="password" type="password" name="password" />
+          <label for="repass">Repeat</label>
+          <input id="repass" type="password" name="repass" />
         </div>
-        <button class="btn form-row action">Sign In</button>
+        <button class="btn form-row action">Sign Up</button>
       </form>
       <div class="box label">
-        Don't have an account? <a class="link" href="/register">Sign up here</a>
+        Already have an account? <a class="link" href="/login">Sign in here</a>
       </div>
     </section>`;

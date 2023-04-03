@@ -1,7 +1,7 @@
 import { createGame, deleteGame, getGames } from '../data/games.js';
 import { html, nothing } from '../lib/lit-html.js';
 import { createSubmitHandler } from '../util.js';
-import { icon } from './partials.js';
+import { smallIcon } from './partials.js';
 
 export async function renderSettings(ctx) {
   const games = ctx.user ? await getGames() : [];
@@ -80,8 +80,11 @@ const settignsTemplate = (
 ) => html`<h1>Settings Page</h1>
   <section class="main">
     ${user
-      ? nothing
-      : html`<div>
+      ? html` <div class="box">
+          <i class="fa-solid fa-user-check"></i> Logged in as ${user.username}.
+          <a class="link" href="/logout">Logout</a>
+        </div>`
+      : html`<div class="box label">
             <a class="link" href="/login">Sign in</a> to enable cloud sync
           </div>
           <br />`}
@@ -107,9 +110,9 @@ const settignsTemplate = (
           <td colspan="2">
             <form @submit=${onCreate}>
               ${error ? html`<p class="error">${error}</p>` : nothing}
-              <input type="text" name="name" placeholder="New Game Name" />
+              <input type="text" name="name" placeholder="Game Name" />
               <button class="btn">
-                <i class="fa-solid fa-plus"></i> Create Game
+                <i class="fa-solid fa-plus"></i> Create
               </button>
             </form>
           </td>
@@ -120,7 +123,11 @@ const settignsTemplate = (
 
 const gameTemplate = (game, onDelete, onLoad) =>
   html`<tr>
-    <td>${game.active ? icon('arrow') : nothing}${game.name}</td>
+    <td>
+      ${game.active ? smallIcon('arrow', 'left') : null}<span class="label left"
+        >${game.name}</span
+      >
+    </td>
     <td>
       <button @click=${onLoad} class="btn">
         <i class="fa-solid fa-download"></i> Load

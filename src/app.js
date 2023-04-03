@@ -7,13 +7,11 @@ import { addStorage } from './middlewares/storage.js';
 import { renderSettings } from './views/settings.js';
 import { renderIslands } from './views/islands.js';
 import { renderLogin } from './views/login.js';
+import { renderRegister } from './views/register.js';
 
-import { login, register } from './data/auth.js';
 import { getGames } from './data/games.js';
 
-window.register = register;
 window.getGames = getGames;
-window.login = login;
 
 page(addRender);
 page(addStorage);
@@ -23,5 +21,6 @@ page('/index.html', '/');
 page('/', renderIslands);
 page('/settings', renderSettings);
 page('/login', renderLogin);
+page('/register', renderRegister);
 
 page.start();
