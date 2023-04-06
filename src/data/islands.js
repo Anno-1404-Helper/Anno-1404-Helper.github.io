@@ -3,7 +3,8 @@ import { addOwner, createGamePointer, filter } from './queries.js';
 
 const endpoints = {
   catalog: '/classes/Island',
-  byGameId: (gameId) => `/classes/Island${filter('game', gameId)}`,
+  byGameId: (gameId) =>
+    `/classes/Island${filter('game', createGamePointer(gameId))}`,
 };
 
 export async function getIslands(gameId) {

@@ -1,7 +1,7 @@
 import { html } from '../lib/lit-html.js';
 import { classMap } from '../lib/directives/class-map.js';
 
-export const layoutTemplate = (tab, content) => html`<header>
+export const layoutTemplate = (tab, islands, content) => html`<header>
     <nav class="main-nav">
       <div class="nav-left">
         <a
@@ -32,20 +32,19 @@ export const layoutTemplate = (tab, content) => html`<header>
           <option value="null" style="font-style: italic" selected="">
             -- Select Island --
           </option>
-          <!-- <option value="Wolf-s-Haven">
-          </option>
-          <option value="Ku-Raast">Ku'Raast</option>
-          <option value="Blackrock">Blackrock</option> -->
+          ${islands.map(
+            (island) =>
+              html`<option value=${island.objectId}>${island.name}</option>`
+          )}
         </select>
-        <!-- <a class="nav island-nav tab" href="/population.html">
-          <span class="nav-label">Wolf's Haven</span>
-        </a>
-        <a class="nav island-nav tab" href="/needs-orient.html">
-          <span class="nav-label">Ku'Raast</span>
-        </a>
-        <a class="nav island-nav tab" href="/population.html">
-          <span class="nav-label">Blackrock</span>
-        </a> -->
+        ${islands.map(
+          (island) => html`<a
+            class="nav island-nav tab"
+            href="/${island.objectId}/population"
+          >
+            <span class="nav-label">${island.name}</span>
+          </a>`
+        )}
       </div>
     </nav>
   </header>

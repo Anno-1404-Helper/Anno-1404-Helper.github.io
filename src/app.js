@@ -11,7 +11,7 @@ import { renderRegister } from './views/register.js';
 
 import { getGames } from './data/games.js';
 
-import * as api from './data/island.js';
+import * as api from './data/islands.js';
 
 window.api = api;
 

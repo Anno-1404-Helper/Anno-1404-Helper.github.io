@@ -1,9 +1,14 @@
-import { getIslands } from '../data/island.js';
 import { html } from '../lib/lit-html.js';
 
 export async function renderIslands(ctx) {
-  const islands = await getIslands();
-  ctx.render(islandsTemplate(islands));
+  const game = ctx.game;
+  if (!game) {
+    ctx.page.redirect('/settings');
+    alert('No loaded game found!');
+    return;
+  }
+
+  ctx.render(islandsTemplate(ctx.islands));
 }
 
 const islandsTemplate = (islands) =>

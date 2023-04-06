@@ -1,21 +1,23 @@
+import { createStorage } from '../util.js';
+
 export function addStorage(ctx, next) {
-  ctx.game = getGame();
+  ctx.game = gameStorage.get();
   ctx.setGame = setGame.bind(ctx);
+  ctx.islands = islandStorage.get();
+  ctx.setIslands = setIslands.bind(ctx);
 
   next();
 }
 
-const gameItem = 'activeGame';
-
-function getGame() {
-  return JSON.parse(localStorage.getItem(gameItem));
-}
+const gameStorage = createStorage('activeGame');
+const islandStorage = createStorage('islands');
 
 function setGame(game) {
   this.game = game;
-  localStorage.setItem(gameItem, JSON.stringify(game));
+  gameStorage.set(game);
 }
 
-function removeGame() {
-  localStorage.removeItem(gameItem);
+function setIslands(islands) {
+  this.islands = islands;
+  islandStorage.set(islands);
 }

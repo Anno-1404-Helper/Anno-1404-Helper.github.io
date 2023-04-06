@@ -1,4 +1,5 @@
 import { createGame, deleteGame, getGames } from '../data/games.js';
+import { getIslands } from '../data/islands.js';
 import { html, nothing } from '../lib/lit-html.js';
 import { createSubmitHandler } from '../util.js';
 import { smallIcon } from './partials.js';
@@ -65,6 +66,9 @@ export async function renderSettings(ctx) {
     const game = games[index];
 
     ctx.setGame(game);
+
+    const islands = await getIslands(game.objectId);
+    ctx.setIslands(islands);
 
     update();
   }

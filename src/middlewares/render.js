@@ -11,6 +11,7 @@ export function addRender(ctx, next) {
 
 function renderView(content) {
   const tab = this?.pathname;
+  const islands = this?.islands || [];
 
-  render(layoutTemplate(tab, content), root);
+  render(layoutTemplate(tab, islands, content), root);
 }

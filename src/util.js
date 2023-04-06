@@ -1,15 +1,17 @@
 const itemName = 'userData';
 
-export function getUserData() {
-  return JSON.parse(localStorage.getItem(itemName));
-}
+const userData = createStorage(itemName);
 
-export function setUserData(data) {
-  return localStorage.setItem(itemName, JSON.stringify(data));
-}
+export const getUserData = userData.get;
+export const setUserData = userData.set;
+export const clearUserData = userData.clear;
 
-export function clearUserData() {
-  localStorage.removeItem(itemName);
+export function createStorage(name) {
+  return {
+    get: () => JSON.parse(localStorage.getItem(name)),
+    set: (data) => localStorage.setItem(name, JSON.stringify(data)),
+    clear: () => localStorage.removeItem(name),
+  };
 }
 
 export function createSubmitHandler(callback) {
