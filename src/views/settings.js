@@ -10,10 +10,10 @@ export async function renderSettings(ctx) {
 
   function update(error) {
     if (ctx.game) {
-      const current = games.find((game) => game.objectId === ctx.game.objectId);
-      if (current) {
-        current.active = true;
-      }
+      games.forEach(
+        (game) =>
+          (game.active = game.objectId === ctx.game.objectId ? true : false)
+      );
     }
 
     ctx.render(
