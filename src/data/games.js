@@ -1,5 +1,5 @@
 import { get, post, del } from './api.js';
-import { addOwner } from './pointers.js';
+import { addOwner } from './queries.js';
 
 const endpoints = {
   catalog: '/classes/Game',

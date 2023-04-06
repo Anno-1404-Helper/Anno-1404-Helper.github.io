@@ -1,14 +1,13 @@
-import { get } from '../data/api.js';
+import { getIslands } from '../data/island.js';
 import { html } from '../lib/lit-html.js';
 
-export function renderIslands(ctx) {
-  ctx.render(islandsTemplate(onClick));
-
-  async function onClick() {
-    await get('/classes/Game');
-  }
+export async function renderIslands(ctx) {
+  const islands = await getIslands();
+  ctx.render(islandsTemplate(islands));
 }
 
-const islandsTemplate = (onClick) =>
+const islandsTemplate = (islands) =>
   html`<h1>Islands Page</h1>
-    <button @click=${onClick}>Make Request</button>`;
+    <ul>
+      ${islands.map((i) => html`<li>${i.name}</li>`)}
+    </ul>`;
