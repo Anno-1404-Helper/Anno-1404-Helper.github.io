@@ -1,7 +1,13 @@
-import { html } from '../lib/lit-html.js';
+import { html, nothing } from '../lib/lit-html.js';
 import { classMap } from '../lib/directives/class-map.js';
 
-export const layoutTemplate = (tab, islands, content) => html`<header>
+export const layoutTemplate = (
+  tab,
+  islands,
+  current,
+  mode = 'population',
+  content
+) => html`<header>
     <nav class="main-nav">
       <div class="nav-left">
         <a
@@ -28,24 +34,41 @@ export const layoutTemplate = (tab, islands, content) => html`<header>
         ></a>
       </div>
       <div class="nav-section">
-        <select class="nav select tab">
+        <select class="nav select tab ${current ? 'active' : ''}">
           <option value="null" style="font-style: italic" selected="">
             -- Select Island --
           </option>
           ${islands.map(
             (island) =>
-              html`<option value=${island.objectId}>${island.name}</option>`
+              html`<option value=${island.url}>${island.name}</option>`
           )}
         </select>
         ${islands.map(
           (island) => html`<a
-            class="nav island-nav tab"
-            href="/${island.objectId}/population"
+            class="nav island-nav tab ${current === island.url ? 'active' : ''}"
+            href="/${island.url}/${mode}"
           >
             <span class="nav-label">${island.name}</span>
           </a>`
         )}
       </div>
     </nav>
+    ${current
+      ? html`<nav class="sub-nav">
+          <a
+            class=${mode === 'ascension' ? 'active' : ''}
+            href="/${current}/ascension"
+            >Ascension</a
+          >
+          <a
+            class=${mode === 'population' ? 'active' : ''}
+            href="/${current}/population"
+            >Population</a
+          >
+          <a class=${mode === 'needs' ? 'active' : ''} href="/${current}/needs"
+            >Needs</a
+          >
+        </nav>`
+      : nothing}
   </header>
   <main>${content}</main>`;

@@ -12,6 +12,8 @@ export function addRender(ctx, next) {
 function renderView(content) {
   const tab = this?.pathname;
   const islands = this?.islands || [];
+  const current = this?.selection?.island;
+  const mode = this?.selection?.mode;
 
-  render(layoutTemplate(tab, islands, content), root);
+  render(layoutTemplate(tab, islands, current, mode, content), root);
 }

@@ -27,3 +27,7 @@ export function createSubmitHandler(callback) {
     callback(data, form);
   };
 }
+
+export function createUrl(name) {
+  return name.replace(/[^A-Za-z0-9]/g, () => '-');
+}
