@@ -1,10 +1,11 @@
-import { get, post } from './api.js';
+import { del, get, post, put } from './api.js';
 import { addOwner, createGamePointer, filter } from './queries.js';
 
 const endpoints = {
   catalog: '/classes/Island',
   byGameId: (gameId) =>
-    `/classes/Island${filter('game', createGamePointer(gameId))}`,
+    `/classes/Island${filter('game', createGamePointer(gameId))}&order=order`,
+  byId: (id) => `/classes/Island/${id}`,
 };
 
 export async function getIslands(gameId) {
@@ -17,4 +18,23 @@ export async function createIsland(island) {
   island.game = createGamePointer(island.game);
 
   return await post(endpoints.catalog, island);
+}
+
+export async function deleteIsland(id) {
+  return await del(endpoints.byId(id));
+}
+
+export async function updateIsland(id, island) {
+  if (typeof island.owner === 'string') {
+    addOwner(island);
+  }
+
+  if (typeof island.game === 'string') {
+    island.game = createGamePointer(island.game);
+  }
+
+  delete island.createdAt;
+  delete island.updatedAt;
+
+  return await put(endpoints.byId(id));
 }
