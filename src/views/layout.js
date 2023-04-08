@@ -6,6 +6,7 @@ export const layoutTemplate = (
   islands,
   current,
   mode = 'population',
+  onChange,
   content
 ) => html`<header>
     <nav class="main-nav">
@@ -34,13 +35,24 @@ export const layoutTemplate = (
         ></a>
       </div>
       <div class="nav-section">
-        <select class="nav select tab ${current ? 'active' : ''}">
-          <option value="null" style="font-style: italic" selected="">
-            -- Select Island --
-          </option>
+        <select
+          @change=${onChange}
+          class="nav select tab ${current ? 'active' : ''}"
+          .value=${current}
+        >
+          ${current
+            ? nothing
+            : html` <option value="null" style="font-style: italic" selected>
+                -- Select Island --
+              </option>`}
           ${islands.map(
             (island) =>
-              html`<option value=${island.url}>${island.name}</option>`
+              html`<option
+                value=${island.url}
+                ?selected=${current === island.name}
+              >
+                ${island.name}
+              </option>`
           )}
         </select>
         ${islands.map(

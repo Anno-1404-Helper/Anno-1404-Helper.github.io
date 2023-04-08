@@ -15,5 +15,13 @@ function renderView(content) {
   const current = this?.selection?.island;
   const mode = this?.selection?.mode;
 
-  render(layoutTemplate(tab, islands, current, mode, content), root);
+  render(
+    layoutTemplate(tab, islands, current, mode, onChange.bind(this), content),
+    root
+  );
+
+  function onChange(event) {
+    const url = event.target.value;
+    this.page.redirect(`/${url}/${mode || 'population'}`);
+  }
 }
