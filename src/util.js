@@ -7,10 +7,30 @@ export const setUserData = userData.set;
 export const clearUserData = userData.clear;
 
 export function createStorage(name) {
+  let data;
+
   return {
-    get: () => JSON.parse(localStorage.getItem(name)),
-    set: (data) => localStorage.setItem(name, JSON.stringify(data)),
-    clear: () => localStorage.removeItem(name),
+    get: () => {
+      if (!data) {
+        const value = localStorage.getItem(name);
+        try {
+          data = JSON.parse(value);
+        } catch (err) {
+          localStorage.removeItem(name);
+          data = null;
+        }
+      }
+
+      return data;
+    },
+    set: (value) => {
+      data = value;
+      localStorage.setItem(name, JSON.stringify(value));
+    },
+    clear: () => {
+      data = undefined;
+      localStorage.removeItem(name);
+    },
   };
 }
 

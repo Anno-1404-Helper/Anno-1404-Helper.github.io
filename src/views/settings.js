@@ -37,7 +37,7 @@ export async function renderSettings(ctx) {
         };
       }
 
-      const gameData = { name };
+      const gameData = { name, islands: [] };
 
       const result = await createGame(gameData);
 
@@ -67,7 +67,11 @@ export async function renderSettings(ctx) {
 
     ctx.setGame(game);
 
-    const islands = await getIslands(game.objectId);
+    const islandData = await getIslands(game.objectId);
+    const islands = game.islands.map((id) =>
+      islandData.find((i) => i.objectId == id)
+    );
+
     ctx.setIslands(islands);
 
     update();

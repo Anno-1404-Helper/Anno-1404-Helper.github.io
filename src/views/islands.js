@@ -1,3 +1,4 @@
+import { updateGame } from '../data/games.js';
 import { createIsland, deleteIsland, updateIsland } from '../data/islands.js';
 import { html } from '../lib/lit-html.js';
 import { createSubmitHandler, createUrl } from '../util.js';
@@ -40,7 +41,10 @@ export async function renderIslands(ctx) {
     const result = await createIsland(island);
     Object.assign(island, result);
     islands.push(island);
+    game.islands.push(island.objectId);
     ctx.setIslands(islands);
+
+    updateGame(game.objectId, game).then(() => ctx.setGame(game));
 
     form.reset();
 
@@ -61,7 +65,10 @@ export async function renderIslands(ctx) {
     if (choice) {
       await deleteIsland(id);
       islands.splice(index, 1);
+      game.islands.splice(index, 1);
       ctx.setIslands(islands);
+
+      updateGame(game.objectId, game).then(() => ctx.setGame(game));
 
       update();
     }
@@ -87,25 +94,36 @@ export async function renderIslands(ctx) {
     }
   }
 
-  async function onMove() {
+  async function onMove(order) {
     const id = this.objectId;
 
     const oldIndex = islands.findIndex((island) => island.objectId === id);
     const island = islands[oldIndex];
 
-    const input = prompt('Enter new order', island.order);
-    const order = Number(input);
-    if (!input || !Number.isInteger(order)) {
-      return;
+    if (typeof order !== 'number') {
+      const input = prompt('Enter new order', oldIndex + 1);
+      order = Number(input);
+      if (input == null || input == '' || !Number.isInteger(order)) {
+        return;
+      }
     }
 
-    island.order = order;
+    let newIndex = order - 1;
+    if (newIndex < 0) {
+      newIndex = 0;
+    }
+    if (newIndex >= islands.length) {
+      newIndex = islands.length - 1;
+    }
 
-    const result = await updateIsland(id, island);
-    Object.assign(island, result);
+    islands.splice(oldIndex, 1);
+    islands.splice(newIndex, 0, island);
 
-    islands.sort((a, b) => a.order - b.order);
+    game.islands = islands.map((island) => island.objectId);
+    await updateGame(game.objectId, game);
+
     ctx.setIslands(islands);
+    ctx.setGame(game);
 
     update();
   }
@@ -125,8 +143,9 @@ const islandsTemplate = (islands, onSubmit, onDelete, onRename, onMove) =>
           </tr>
         </thead>
         <tbody>
-          ${islands.map((island) =>
+          ${islands.map((island, index) =>
             islandRow(
+              index,
               island,
               onDelete.bind(island),
               onRename.bind(island),
@@ -147,13 +166,15 @@ const islandsTemplate = (islands, onSubmit, onDelete, onRename, onMove) =>
       </table>
     </section>`;
 
-const islandRow = (island, onDelete, onRename, onMove) => html`<tr>
+const islandRow = (index, island, onDelete, onRename, onMove) => html`<tr>
   <td class="wide">
     <div class="btn-grid">
-      <button @click=${onMove} class="btn">
-        <i class="fa-solid fa-arrow-down-up-across-line"></i>
+      <button class="btn" @click=${onMove.bind(null, index)}>
+        <i class="fa-solid fa-arrow-up"></i>
       </button>
-      <span class="label">${island.order}</span>
+      <button class="btn" @click=${onMove.bind(null, index + 2)}>
+        <i class="fa-solid fa-arrow-down"></i>
+      </button>
     </div>
   </td>
   <td>
