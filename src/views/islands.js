@@ -20,7 +20,8 @@ export async function renderIslands(ctx) {
         islands,
         createSubmitHandler(onCreate),
         onDelete,
-        onRename
+        onRename,
+        onMove
       )
     );
   }
@@ -46,7 +47,9 @@ export async function renderIslands(ctx) {
     update();
   }
 
-  async function onDelete(id) {
+  async function onDelete() {
+    const id = this.objectId;
+
     const index = islands.findIndex((island) => island.objectId === id);
     if (index === -1) {
       return alert('Island not found, please reload game!');
@@ -64,7 +67,9 @@ export async function renderIslands(ctx) {
     }
   }
 
-  async function onRename(id) {
+  async function onRename() {
+    const id = this.objectId;
+
     const index = islands.findIndex((island) => island.objectId === id);
     const island = islands[index];
 
@@ -81,9 +86,32 @@ export async function renderIslands(ctx) {
       update();
     }
   }
+
+  async function onMove() {
+    const id = this.objectId;
+
+    const oldIndex = islands.findIndex((island) => island.objectId === id);
+    const island = islands[oldIndex];
+
+    const input = prompt('Enter new order', island.order);
+    const order = Number(input);
+    if (!input || !Number.isInteger(order)) {
+      return;
+    }
+
+    island.order = order;
+
+    const result = await updateIsland(id, island);
+    Object.assign(island, result);
+
+    islands.sort((a, b) => a.order - b.order);
+    ctx.setIslands(islands);
+
+    update();
+  }
 }
 
-const islandsTemplate = (islands, onSubmit, onDelete, onRename) =>
+const islandsTemplate = (islands, onSubmit, onDelete, onRename, onMove) =>
   html`<h1>Islands Overview</h1>
     <section class="main">
       <table>
@@ -100,8 +128,9 @@ const islandsTemplate = (islands, onSubmit, onDelete, onRename) =>
           ${islands.map((island) =>
             islandRow(
               island,
-              onDelete.bind(null, island.objectId),
-              onRename.bind(null, island.objectId)
+              onDelete.bind(island),
+              onRename.bind(island),
+              onMove.bind(island)
             )
           )}
         </tbody>
@@ -118,22 +147,20 @@ const islandsTemplate = (islands, onSubmit, onDelete, onRename) =>
       </table>
     </section>`;
 
-const islandRow = (island, onDelete, onRename) => html`<tr>
+const islandRow = (island, onDelete, onRename, onMove) => html`<tr>
   <td class="wide">
     <div class="btn-grid">
-      <button class="btn">
-        <i class="fa-solid fa-up-long"></i>
+      <button @click=${onMove} class="btn">
+        <i class="fa-solid fa-arrow-down-up-across-line"></i>
       </button>
-      <button class="btn">
-        <i class="fa-solid fa-down-long"></i>
-      </button>
+      <span class="label">${island.order}</span>
     </div>
   </td>
   <td>
     <span class="label prim">${island.name}</span>
     <span class="label sub narrow">Population:&nbsp;PLACEHOLDER</span>
     <div class="grid narrow">
-      <button class="btn">
+      <button @click=${onMove} class="btn">
         <i class="fa-solid fa-arrow-down-up-across-line"></i>
       </button>
       <button @click=${onRename} class="btn">
