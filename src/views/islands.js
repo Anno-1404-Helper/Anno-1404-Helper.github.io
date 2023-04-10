@@ -158,7 +158,9 @@ const islandsTemplate = (islands, onSubmit, onDelete, onRename, onMove) =>
             <td colspan="5">
               <form @submit=${onSubmit}>
                 <input type="text" name="name" />
-                <button class="btn">Create</button>
+                <button class="btn">
+                  <i class="fa-solid fa-plus"></i> Create
+                </button>
               </form>
             </td>
           </tr>

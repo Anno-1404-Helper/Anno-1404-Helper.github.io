@@ -6,7 +6,7 @@ export const getUserData = userData.get;
 export const setUserData = userData.set;
 export const clearUserData = userData.clear;
 
-export function createStorage(name) {
+export function createStorage(name, defaultValue = null) {
   let data;
 
   return {
@@ -21,7 +21,7 @@ export function createStorage(name) {
         }
       }
 
-      return data;
+      return data || defaultValue;
     },
     set: (value) => {
       data = value;
@@ -50,4 +50,16 @@ export function createSubmitHandler(callback) {
 
 export function createUrl(name) {
   return name.replace(/[^A-Za-z0-9]/g, () => '-');
+}
+
+export function percent(value, rate) {
+  return (value * rate) / 100;
+}
+
+export function popRate(value, rate) {
+  return Math.floor(percent(value, rate));
+}
+
+export function round(value, precision) {
+  return Math.round(value * 10 ** precision) / 10 ** precision;
 }

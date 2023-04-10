@@ -1,6 +1,7 @@
 import page from './lib/page.mjs';
 
 import { addRender } from './middlewares/render.js';
+import { addConfig } from './middlewares/config.js';
 import { addSession } from './middlewares/session.js';
 import { addStorage } from './middlewares/storage.js';
 import { addSelection } from './middlewares/selection.js';
@@ -15,6 +16,7 @@ import { renderNeeds } from './views/needs.js';
 
 page('/:island/:mode', addSelection);
 page(addRender);
+page(addConfig);
 page(addStorage);
 page(addSession);
 

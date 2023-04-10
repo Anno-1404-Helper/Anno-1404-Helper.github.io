@@ -1,4 +1,5 @@
 import { clearUserData, getUserData } from '../util.js';
+import { mask, unmask } from '../views/partials.js';
 
 const host = 'https://parseapi.back4app.com';
 const appId = '9QmOxvHUky9KQxo8tPUQem93BPEolCcm20rMyrBf';
@@ -24,6 +25,7 @@ async function request(method, url, data) {
   }
 
   try {
+    mask();
     const response = await fetch(`${host}${url}`, options);
 
     let result;
@@ -47,6 +49,8 @@ async function request(method, url, data) {
   } catch (error) {
     handleError(error);
     throw error;
+  } finally {
+    unmask();
   }
 }
 

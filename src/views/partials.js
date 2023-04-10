@@ -35,3 +35,31 @@ const iconTemplate = (gridSize, x, y, classList) => html` <span
   class="icon ${classList.join(' ')}"
   style="background-position: -${x * gridSize}px -${y * gridSize}px"
 ></span>`;
+
+const loader = document.createElement('div');
+loader.classList.add('spinner-overlay');
+//! Bad idea, exception
+loader.innerHTML = `<div class="spinner-container">
+    <div class="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>`;
+
+export function mask() {
+  document.body.appendChild(loader);
+}
+
+export function unmask() {
+  loader.remove();
+}
