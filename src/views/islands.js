@@ -62,16 +62,18 @@ export async function renderIslands(ctx) {
     const choice = confirm(
       `Are you sure you want to delete ${islands[index].name}?`
     );
-    if (choice) {
-      await deleteIsland(id);
-      islands.splice(index, 1);
-      game.islands.splice(index, 1);
-      ctx.setIslands(islands);
-
-      updateGame(game.objectId, game).then(() => ctx.setGame(game));
-
-      update();
+    if (!choice) {
+      return;
     }
+
+    await deleteIsland(id);
+    islands.splice(index, 1);
+    game.islands.splice(index, 1);
+    ctx.setIslands(islands);
+
+    updateGame(game.objectId, game).then(() => ctx.setGame(game));
+
+    update();
   }
 
   async function onRename() {

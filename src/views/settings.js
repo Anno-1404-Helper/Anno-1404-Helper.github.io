@@ -56,6 +56,11 @@ export async function renderSettings(ctx) {
   async function onDelete(index) {
     const game = games[index];
 
+    const choice = confirm(`Are you sure you want to delete ${game.name}?`);
+    if (!choice) {
+      return;
+    }
+
     await deleteGame(game.objectId);
     games.splice(index, 1);
 
