@@ -5,7 +5,9 @@ const host = 'https://parseapi.back4app.com';
 const appId = '9QmOxvHUky9KQxo8tPUQem93BPEolCcm20rMyrBf';
 const apiKey = 'wjOwiaTMqvtAefnClzQ4oVpWSUPNRUCgIiEVkgsb';
 
-async function request(method, url, data) {
+let inFlight = 0;
+
+async function request(method, url, data, dontMask) {
   const options = {
     method,
     headers: {
@@ -25,7 +27,11 @@ async function request(method, url, data) {
   }
 
   try {
-    mask();
+    if (!dontMask) {
+      inFlight++;
+      mask();
+    }
+
     const response = await fetch(`${host}${url}`, options);
 
     let result;
@@ -50,7 +56,13 @@ async function request(method, url, data) {
     handleError(error);
     throw error;
   } finally {
-    unmask();
+    if (!dontMask) {
+      inFlight--;
+      if (inFlight <= 0) {
+        inFlight = 0;
+        unmask();
+      }
+    }
   }
 }
 

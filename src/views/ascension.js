@@ -1,13 +1,19 @@
+import { createAscension, updateAscension } from '../data/ascension.js';
 import { html } from '../lib/lit-html.js';
-import { createSubmitHandler, popRate } from '../util.js';
+import { createSubmitHandler, popRate, throttle } from '../util.js';
 import { icon } from './partials.js';
 
-export function renderAscension(ctx) {
+export async function renderAscension(ctx) {
   const populationSettings = ctx.settings.population;
   const islandUrl = ctx.selection.island;
+  const island = ctx.islands.find((island) => island.url === islandUrl);
+  if (!island) {
+    return ctx.page.redirect('/');
+  }
 
   if (!ctx.ascension[islandUrl]) {
-    ctx.ascension[islandUrl] = {
+    const model = {
+      island: island.objectId,
       occident: 0,
       orient: 0,
       beggars: 0,
@@ -15,10 +21,15 @@ export function renderAscension(ctx) {
       envoys: 0,
       envoyLvl: 0,
     };
+
+    const result = await createAscension(model);
+    Object.assign(model, result);
+    ctx.ascension[islandUrl] = model;
+    ctx.setAscension(ctx.ascension);
   }
 
   const ascension = ctx.ascension[islandUrl];
-
+  ctx.commit = throttle(updateAscension, 5000);
   update();
 
   function update() {
@@ -51,6 +62,7 @@ export function renderAscension(ctx) {
     ascension.envoyLvl = envoyLvl;
 
     ctx.setAscension(ctx.ascension);
+    ctx.commit(ascension.objectId, ascension, true);
 
     update();
   }

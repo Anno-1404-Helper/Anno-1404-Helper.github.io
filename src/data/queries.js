@@ -18,6 +18,7 @@ export function filter(fieldName, value) {
 }
 
 export const createGamePointer = createPointer.bind(null, 'Game');
+export const createIslandPointer = createPointer.bind(null, 'Island');
 
 function createPointer(className, objectId) {
   return {

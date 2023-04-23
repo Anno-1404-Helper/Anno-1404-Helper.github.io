@@ -5,6 +5,7 @@ import { addConfig } from './middlewares/config.js';
 import { addSession } from './middlewares/session.js';
 import { addStorage } from './middlewares/storage.js';
 import { addSelection } from './middlewares/selection.js';
+import { addCommit } from './middlewares/commit.js';
 
 import { renderSettings } from './views/settings.js';
 import { renderIslands } from './views/islands.js';
@@ -15,10 +16,11 @@ import { renderAscension } from './views/ascension.js';
 import { renderNeeds } from './views/needs.js';
 
 page('/:island/:mode', addSelection);
-page(addRender);
+page(addSession);
 page(addConfig);
 page(addStorage);
-page(addSession);
+page(addRender);
+page(addCommit);
 
 page('/index.html', '/');
 page('/', renderIslands);
