@@ -44,9 +44,11 @@ export function createSubmitHandler(callback) {
       [...formData.entries()].map(([k, v]) => {
         v = v.trim();
 
-        const asNumber = Number(v);
-        if (Number.isFinite(asNumber)) {
-          v = asNumber;
+        if (k != 'password' && k != 'repass') {
+          const asNumber = Number(v);
+          if (Number.isFinite(asNumber)) {
+            v = asNumber;
+          }
         }
 
         return [k, v];

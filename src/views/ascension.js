@@ -1,4 +1,5 @@
 import { createAscension, updateAscension } from '../data/ascension.js';
+import { repeat } from '../lib/directives/repeat.js';
 import { html } from '../lib/lit-html.js';
 import { createSubmitHandler, popRate, throttle } from '../util.js';
 import { icon } from './partials.js';
@@ -13,6 +14,7 @@ export async function renderAscension(ctx) {
 
   if (!ctx.ascension[islandUrl]) {
     const model = {
+      game: ctx.game.objectId,
       island: island.objectId,
       occident: 0,
       orient: 0,
@@ -38,6 +40,7 @@ export async function renderAscension(ctx) {
 
     ctx.render(
       ascensionTemplate(
+        island.objectId,
         ascensionSection(occident),
         ascensionSection(orient),
         ascension,
@@ -71,9 +74,13 @@ export async function renderAscension(ctx) {
 //* @viktorpts for the complicated game logic calculation, and
 //* actually tying it to the presentation layer
 
-const ascensionTemplate = (occident, orient, data, onSubmit) => html`<h1>
-    Ascension Pyramid
-  </h1>
+const ascensionTemplate = (
+  islandId,
+  occident,
+  orient,
+  data,
+  onSubmit
+) => html`<h1>Ascension Pyramid</h1>
   <section class="main">
     <form @submit=${onSubmit} @input=${onSubmit}>
       <section>
@@ -97,18 +104,7 @@ const ascensionTemplate = (occident, orient, data, onSubmit) => html`<h1>
                     <div class="multi-level">
                         <label class="label">Beggar Prince</label>
                         <div class="label">
-                            <input name="beggarLvl" type="radio" value="0" ?checked=${
-                              data.beggarLvl == 0
-                            }>
-                            <input name="beggarLvl" type="radio" value="1" ?checked=${
-                              data.beggarLvl == 1
-                            }>
-                            <input name="beggarLvl" type="radio" value="2" ?checked=${
-                              data.beggarLvl == 2
-                            }>
-                            <input name="beggarLvl" type="radio" value="3" ?checked=${
-                              data.beggarLvl == 3
-                            }>
+                          ${radioLvl(islandId, 'beggarLvl', data.beggarLvl)}
                         </div>
                     </div>
                 </td>
@@ -125,18 +121,7 @@ const ascensionTemplate = (occident, orient, data, onSubmit) => html`<h1>
                     <div class="multi-level">
                         <label class="label">Envoy's Favour</label>
                         <div class="label">
-                            <input name="envoyLvl" type="radio" value="0" ?checked=${
-                              data.envoyLvl == 0
-                            }>
-                            <input name="envoyLvl" type="radio" value="1" ?checked=${
-                              data.envoyLvl == 1
-                            }>
-                            <input name="envoyLvl" type="radio" value="2" ?checked=${
-                              data.envoyLvl == 2
-                            }>
-                            <input name="envoyLvl" type="radio" value="3" ?checked=${
-                              data.envoyLvl == 3
-                            }>
+                          ${radioLvl(islandId, 'envoyLvl', data.envoyLvl)}
                         </div>
                     </div>
                 </td>
@@ -158,6 +143,19 @@ const ascensionTemplate = (occident, orient, data, onSubmit) => html`<h1>
       </section>
     </form>
   </section>`;
+
+const radioLvl = (islandId, name, lvl) =>
+  repeat(
+    [0, 1, 2, 3],
+    () => Math.random(),
+    (n) => html`<input
+      data-island=${islandId}
+      name=${name}
+      type="radio"
+      value=${n}
+      ?checked=${lvl == n}
+    />`
+  );
 
 const ascensionSection = (distribution) => (form) =>
   html`<table>

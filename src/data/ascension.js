@@ -1,20 +1,26 @@
 import { del, get, post, put } from './api.js';
-import { addOwner, createIslandPointer, filter } from './queries.js';
+import {
+  addOwner,
+  createGamePointer,
+  createIslandPointer,
+  filter,
+} from './queries.js';
 
 const endpoints = {
   catalog: '/classes/Ascension',
-  byIslandId: (islandId) =>
-    `/classes/Ascension?${filter('island', createIslandPointer(islandId))}`,
+  byGameId: (gameId) =>
+    `/classes/Ascension?${filter('game', createGamePointer(gameId))}`,
   byId: (islandId) => `/classes/Ascension/${islandId}`,
 };
 
-export async function getAscension(islandId) {
-  const data = await get(endpoints.byIslandId(islandId));
+export async function getAscension(gameId) {
+  const data = await get(endpoints.byGameId(gameId));
   return data.results;
 }
 
 export async function createAscension(ascension) {
   addOwner(ascension);
+  ascension.game = createGamePointer(ascension.game);
   ascension.island = createIslandPointer(ascension.island);
   return await post(endpoints.catalog, ascension);
 }
@@ -22,6 +28,10 @@ export async function createAscension(ascension) {
 export async function updateAscension(id, ascension, dontMask = false) {
   if (typeof ascension.owner == 'string') {
     addOwner(ascension);
+  }
+
+  if (typeof ascension.game == 'string') {
+    ascension.game = createGamePointer(ascension.game);
   }
 
   if (typeof ascension.island == 'string') {

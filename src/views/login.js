@@ -1,5 +1,5 @@
 import { login } from '../data/auth.js';
-import { html } from '../lib/lit-html.js';
+import { html, nothing } from '../lib/lit-html.js';
 import { createSubmitHandler } from '../util.js';
 
 export function renderLogin(ctx) {
@@ -31,8 +31,8 @@ const loginTemplate = (onLogin, formData = {}, error) =>
   html`<h1>Login</h1>
     <section class="main">
       <form @submit=${onLogin}>
+        ${error ? html`<p class="error">${error}</p>` : nothing}
         <div class="layout">
-          ${error ? html`<p class="error">${error}</p>` : null}
           <label for="username">Username</label>
           <input
             id="username"
