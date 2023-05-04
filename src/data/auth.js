@@ -1,4 +1,4 @@
-import { clearUserData, getUserData, setUserData } from '../util.js';
+import { clearUserData, setUserData } from '../util.js';
 import { del, get, post } from './api.js';
 import { filter } from './queries.js';
 
@@ -33,14 +33,14 @@ export async function login(username, password) {
   });
 }
 
-export async function logout(ctx, next) {
-  const user = getUserData();
-  const [session] = (await get(endpoints.sessionByToken(user.sessionToken)))
-    .results;
-
-  await del(endpoints.sessionById(session.objectId));
-  clearUserData();
-
-  ctx.page.redirect('/settings');
-  next();
+export async function logout(sessionToken) {
+  try {
+    const sessions = await get(endpoints.sessionByToken(sessionToken));
+    const [currentSession] = sessions.results;
+    await del(endpoints.sessionById(currentSession.objectId));
+  } catch (err) {
+    err.handled = true;
+  } finally {
+    clearUserData();
+  }
 }
