@@ -9,7 +9,7 @@ import {
 const endpoints = {
   catalog: '/classes/Ascension',
   byGameId: (gameId) =>
-    `/classes/Ascension?${filter('game', createGamePointer(gameId))}`,
+    `/classes/Ascension${filter('game', createGamePointer(gameId))}`,
   byId: (islandId) => `/classes/Ascension/${islandId}`,
 };
 

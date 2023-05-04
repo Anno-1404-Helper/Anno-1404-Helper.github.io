@@ -13,12 +13,27 @@ export async function renderIslands(ctx) {
 
   const islands = ctx.islands;
 
+  const populationSettings = ctx.settings.population;
+  const population = Object.fromEntries(
+    islands.map((island) => [island.url, 0])
+  );
+  for (const island in population) {
+    if (!ctx.population[island]) {
+      continue;
+    }
+
+    population[island] = Object.keys(populationSettings.ascension)
+      .map((k) => ctx.population[island][k])
+      .reduce((acc, curr) => acc + curr, 0);
+  }
+
   update();
 
   function update() {
     ctx.render(
       islandsTemplate(
         islands,
+        population,
         createSubmitHandler(onCreate),
         onDelete,
         onRename,
@@ -131,7 +146,14 @@ export async function renderIslands(ctx) {
   }
 }
 
-const islandsTemplate = (islands, onSubmit, onDelete, onRename, onMove) =>
+const islandsTemplate = (
+  islands,
+  population,
+  onSubmit,
+  onDelete,
+  onRename,
+  onMove
+) =>
   html`<h1>Islands Overview</h1>
     <section class="main">
       <table>
@@ -149,6 +171,7 @@ const islandsTemplate = (islands, onSubmit, onDelete, onRename, onMove) =>
             islandRow(
               index,
               island,
+              population[island.url],
               onDelete.bind(island),
               onRename.bind(island),
               onMove.bind(island)
@@ -170,7 +193,14 @@ const islandsTemplate = (islands, onSubmit, onDelete, onRename, onMove) =>
       </table>
     </section>`;
 
-const islandRow = (index, island, onDelete, onRename, onMove) => html`<tr>
+const islandRow = (
+  index,
+  island,
+  population,
+  onDelete,
+  onRename,
+  onMove
+) => html`<tr>
   <td class="wide">
     <div class="btn-grid">
       <button class="btn" @click=${onMove.bind(null, index)}>
@@ -183,7 +213,7 @@ const islandRow = (index, island, onDelete, onRename, onMove) => html`<tr>
   </td>
   <td>
     <span class="label prim">${island.name}</span>
-    <span class="label sub narrow">Population:&nbsp;PLACEHOLDER</span>
+    <span class="label sub narrow">Population:&nbsp;${population}</span>
     <div class="grid narrow">
       <button @click=${onMove} class="btn">
         <i class="fa-solid fa-arrow-down-up-across-line"></i>
@@ -197,14 +227,13 @@ const islandRow = (index, island, onDelete, onRename, onMove) => html`<tr>
     </div>
   </td>
   <td class="wide">
-    <span class="label prim">PLACEHOLDER</span>
+    <span class="label prim">${population}</span>
   </td>
   <td>
     <div class="btn-grid">
       <a class="btn" href="/${island.url}/ascension">Ascension</a>
       <a class="btn" href="/${island.url}/population">Population</a>
       <a class="btn" href="/${island.url}/needs">Needs</a>
-      <!-- <a href="/lit$398638298$/industry">Industry</a> -->
     </div>
   </td>
   <td class="wide">
