@@ -12,11 +12,10 @@ import { renderSettings } from './views/settings.js';
 import { renderIslands } from './views/islands.js';
 import { renderLogin } from './views/login.js';
 import { renderRegister } from './views/register.js';
+import { renderLogout } from './views/logout.js';
 import { renderPopulation } from './views/population.js';
 import { renderAscension } from './views/ascension.js';
 import { renderNeeds } from './views/needs.js';
-
-import { logout } from './data/auth.js';
 
 page('/:island/:mode', addSelection);
 page(addSession);
@@ -30,7 +29,7 @@ page('/', renderIslands);
 page('/settings', renderSettings);
 page('/login', renderLogin);
 page('/register', renderRegister);
-page('/logout', logout);
+page('/logout', renderLogout);
 page('/:island/population', hasGame, renderPopulation);
 page('/:island/ascension', hasGame, renderAscension);
 page('/:island/needs', hasGame, renderNeeds);
