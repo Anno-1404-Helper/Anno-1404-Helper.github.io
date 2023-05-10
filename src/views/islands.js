@@ -17,7 +17,10 @@ export async function renderIslands(ctx) {
   const population = Object.fromEntries(
     islands.map((island) => [island.url, 0])
   );
+  console.log(population);
   for (const island in population) {
+    console.log(island);
+    console.log(ctx.population);
     if (!ctx.population[island]) {
       continue;
     }
@@ -99,13 +102,24 @@ export async function renderIslands(ctx) {
 
     const newName = prompt(`Enter new name for ${island.name}`, island.name);
 
+    const oldUrl = island.url;
+
     if (newName) {
       island.name = newName;
       island.url = createUrl(newName);
 
       const result = await updateIsland(id, island);
       Object.assign(island, result);
+
+      console.log(population);
+
       ctx.setIslands(islands);
+      ctx.population[island.url] = ctx.population[oldUrl];
+      population[island.url] = population[oldUrl];
+      delete ctx.population[oldUrl];
+      delete population[oldUrl];
+
+      console.log(population);
 
       update();
     }

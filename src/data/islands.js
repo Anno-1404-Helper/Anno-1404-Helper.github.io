@@ -36,5 +36,5 @@ export async function updateIsland(id, island) {
   delete island.createdAt;
   delete island.updatedAt;
 
-  return await put(endpoints.byId(id));
+  return await put(endpoints.byId(id), island);
 }
