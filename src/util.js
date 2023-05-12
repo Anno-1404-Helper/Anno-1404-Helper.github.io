@@ -79,6 +79,35 @@ export function outputToKgPerMin(output) {
   return (60 / output) * 1000;
 }
 
+export function getRate(output, input, rate, settings) {
+  if (!input) {
+    return null;
+  }
+
+  const consumable = settings.find(([n]) => n === input)?.[1];
+  (consumable.output / output) * rate;
+
+  return round((consumable.output / output) * rate, 3);
+}
+
+export function deepClone(ref) {
+  if (Array.isArray(ref)) {
+    return ref.map(deepClone);
+  }
+
+  if (typeof ref === 'object' && ref !== null) {
+    return Object.fromEntries(
+      Object.entries(ref).map(([k, v]) => [k, deepClone(v)])
+    );
+  }
+
+  return ref;
+}
+
+export function pretty(...refs) {
+  refs.forEach((ref) => console.log(JSON.stringify(ref, null, 2)));
+}
+
 export function throttle(fn, delay) {
   let timer = null;
 

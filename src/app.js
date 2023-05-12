@@ -7,6 +7,7 @@ import { addStorage } from './middlewares/storage.js';
 import { addSelection } from './middlewares/selection.js';
 import { addCommit } from './middlewares/commit.js';
 import { hasGame } from './middlewares/guards.js';
+import { title } from './middlewares/title.js';
 
 import { renderSettings } from './views/settings.js';
 import { renderIslands } from './views/islands.js';
@@ -16,6 +17,8 @@ import { renderLogout } from './views/logout.js';
 import { renderPopulation } from './views/population.js';
 import { renderAscension } from './views/ascension.js';
 import { renderNeeds } from './views/needs.js';
+import { renderIcons } from './views/icons.js';
+import { renderRates } from './views/rates.js';
 
 page('/:island/:mode', addSelection);
 page(addSession);
@@ -25,13 +28,25 @@ page(addRender);
 page(addCommit);
 
 page('/index.html', '/');
-page('/', renderIslands);
-page('/settings', renderSettings);
-page('/login', renderLogin);
-page('/register', renderRegister);
-page('/logout', renderLogout);
-page('/:island/population', hasGame, renderPopulation);
-page('/:island/ascension', hasGame, renderAscension);
-page('/:island/needs', hasGame, renderNeeds);
+page('/', title('Islands'), renderIslands);
+page('/settings', title('Settings'), renderSettings);
+page('/login', title('Login'), renderLogin);
+page('/register', title('Register'), renderRegister);
+page('/logout', title('Logout'), renderLogout);
+page(
+  '/:island/population',
+  hasGame,
+  title('$name | Population'),
+  renderPopulation
+);
+page(
+  '/:island/ascension',
+  hasGame,
+  title('$name | Ascension'),
+  renderAscension
+);
+page('/:island/needs', hasGame, title('$name | Needs'), renderNeeds);
+page('/icons', title('Icons'), renderIcons);
+page('/rates', title('Production'), renderRates);
 
 page.start();

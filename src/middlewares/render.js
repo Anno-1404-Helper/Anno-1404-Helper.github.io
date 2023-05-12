@@ -15,6 +15,10 @@ function renderView(content) {
   const current = this?.selection?.island;
   const mode = this?.selection?.mode;
 
+  document.title = [this?.customTitle, 'Anno 1404 Helper']
+    .filter((x) => x) //* Removes falsy values
+    .join(' | ');
+
   render(
     layoutTemplate(tab, islands, current, mode, onChange.bind(this), content),
     root

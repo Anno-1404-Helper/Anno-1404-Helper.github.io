@@ -111,15 +111,14 @@ export async function renderIslands(ctx) {
       const result = await updateIsland(id, island);
       Object.assign(island, result);
 
-      console.log(population);
-
       ctx.setIslands(islands);
+
       ctx.population[island.url] = ctx.population[oldUrl];
       population[island.url] = population[oldUrl];
       delete ctx.population[oldUrl];
       delete population[oldUrl];
 
-      console.log(population);
+      ctx.setPopulation(ctx.population);
 
       update();
     }
