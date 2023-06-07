@@ -20,6 +20,8 @@ import { renderNeeds } from './views/needs.js';
 import { renderIcons } from './views/icons.js';
 import { renderRates } from './views/rates.js';
 
+page.base('/Anno-1404-Helper.github.io');
+
 page('/:island/:mode', addSelection);
 page(addSession);
 page(addConfig);
