@@ -46,6 +46,6 @@ const loginTemplate = (onLogin, formData = {}, error) =>
         <button class="btn form-row action">Sign In</button>
       </form>
       <div class="box label">
-        Don't have an account? <a class="link" href="/register">Sign up here</a>
+        Don't have an account? <a class="link" href="register">Sign up here</a>
       </div>
     </section>`;

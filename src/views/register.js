@@ -56,6 +56,6 @@ const registerTemplate = (onRegister, formData = {}, error) =>
         <button class="btn form-row action">Sign Up</button>
       </form>
       <div class="box label">
-        Already have an account? <a class="link" href="/login">Sign in here</a>
+        Already have an account? <a class="link" href="login">Sign in here</a>
       </div>
     </section>`;

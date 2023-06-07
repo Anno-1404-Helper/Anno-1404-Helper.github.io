@@ -12,7 +12,7 @@ export const layoutTemplate = (
     <nav class="main-nav">
       <div class="nav-left">
         <a
-          href="/settings"
+          href="settings"
           class=${classMap({
             nav: true,
             tab: true,
@@ -24,7 +24,7 @@ export const layoutTemplate = (
       </div>
       <div class="nav-left">
         <a
-          href="/"
+          href="/Anno-1404-Helper.github.io/"
           class=${classMap({
             nav: true,
             tab: true,
@@ -58,7 +58,7 @@ export const layoutTemplate = (
         ${islands.map(
           (island) => html`<a
             class="nav island-nav tab ${current === island.url ? 'active' : ''}"
-            href="/${island.url}/${mode}"
+            href="${island.url}/${mode}"
           >
             <span class="nav-label">${island.name}</span>
           </a>`
@@ -69,15 +69,15 @@ export const layoutTemplate = (
       ? html`<nav class="sub-nav">
           <a
             class=${mode === 'ascension' ? 'active' : ''}
-            href="/${current}/ascension"
+            href="${current}/ascension"
             >Ascension</a
           >
           <a
             class=${mode === 'population' ? 'active' : ''}
-            href="/${current}/population"
+            href="${current}/population"
             >Population</a
           >
-          <a class=${mode === 'needs' ? 'active' : ''} href="/${current}/needs"
+          <a class=${mode === 'needs' ? 'active' : ''} href="${current}/needs"
             >Needs</a
           >
         </nav>`
