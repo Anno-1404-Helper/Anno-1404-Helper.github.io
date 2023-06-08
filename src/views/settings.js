@@ -112,10 +112,10 @@ const settignsTemplate = (
     ${user
       ? html` <div class="box">
           <i class="fa-solid fa-user-check"></i> Logged in as ${user.username}.
-          <a class="link" href="/logout">Logout</a>
+          <a class="link" href="./logout">Logout</a>
         </div>`
       : html`<div class="box label">
-            <a class="link" href="/login">Sign in</a> to enable cloud sync
+            <a class="link" href="./login">Sign in</a> to enable cloud sync
           </div>
           <br />`}
 

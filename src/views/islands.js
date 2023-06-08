@@ -244,9 +244,9 @@ const islandRow = (
   </td>
   <td>
     <div class="btn-grid">
-      <a class="btn" href="/${island.url}/ascension">Ascension</a>
-      <a class="btn" href="/${island.url}/population">Population</a>
-      <a class="btn" href="/${island.url}/needs">Needs</a>
+      <a class="btn" href="./${island.url}/ascension">Ascension</a>
+      <a class="btn" href="./${island.url}/population">Population</a>
+      <a class="btn" href="./${island.url}/needs">Needs</a>
     </div>
   </td>
   <td class="wide">
